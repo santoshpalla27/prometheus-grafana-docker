@@ -6,16 +6,15 @@ scrape_configs:
     static_configs:
       - targets: ['prometheus:9090']
 
-  - job_name: 'node-exporter'
+  - job_name: 'node-exporter-local'
     static_configs:
       - targets: ['node-exporter:9100']
 
-  - job_name: 'cadvisor'
+  - job_name: 'cadvisor-local'
     static_configs:
       - targets: ['cadvisor:8080']
 
-  # Node Exporter (Running on EC2s, port 9100)
-  - job_name: 'node-exporter'
+  - job_name: 'node-exporter-ec2'
     ec2_sd_configs:
       - region: ap-south-1
         port: 9100
@@ -27,8 +26,7 @@ scrape_configs:
         target_label: __address__
         replacement: "$1:9100"
 
-  # cAdvisor (Running on EC2s, port 8080)
-  - job_name: 'cadvisor'
+  - job_name: 'cadvisor-ec2'
     ec2_sd_configs:
       - region: ap-south-1
         port: 8080
