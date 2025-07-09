@@ -1,0 +1,41 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+
+  # Node Exporter (Running on EC2s, port 9100)
+  - job_name: 'node-exporter'
+    ec2_sd_configs:
+      - region: ap-south-1
+        port: 9100
+        filters:
+          - name: "tag:Name"
+            values: ["MainInstance"]
+    relabel_configs:
+      - source_labels: [__meta_ec2_private_ip]
+        target_label: __address__
+        replacement: "$1:9100"
+
+  # cAdvisor (Running on EC2s, port 8080)
+  - job_name: 'cadvisor'
+    ec2_sd_configs:
+      - region: ap-south-1
+        port: 8080
+        filters:
+          - name: "tag:Name"
+            values: ["MainInstance"]
+    relabel_configs:
+      - source_labels: [__meta_ec2_private_ip]
+        target_label: __address__
+        replacement: "$1:8080"
