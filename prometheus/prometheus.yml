@@ -10,9 +10,9 @@ scrape_configs:
     static_configs:
       - targets: ['node-exporter:9100']
 
-  # - job_name: 'cadvisor-local'
-  #   static_configs:
-  #     - targets: ['cadvisor:8080']
+  - job_name: 'cadvisor-local'
+    static_configs:
+      - targets: ['cadvisor:8080']
 
   - job_name: 'node-exporter-ec2'
     ec2_sd_configs:
