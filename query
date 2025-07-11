@@ -43,8 +43,7 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "percent"
+          }
         },
         "overrides": []
       },
@@ -54,11 +53,13 @@
         "x": 0,
         "y": 0
       },
-      "id": 6,
+      "id": 1,
       "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -66,22 +67,35 @@
           "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
       "pluginVersion": "12.0.2",
       "targets": [
         {
           "editorMode": "code",
-          "expr": "((node_memory_MemTotal_bytes{instance=~\"${instance_ip}:.*\"} - node_memory_MemAvailable_bytes{instance=~\"${instance_ip}:.*\"}) \r\n / node_memory_MemTotal_bytes{instance=~\"${instance_ip}:.*\"}) * 100\r\n",
-          "legendFormat": "{{instance}}",
+          "expr": "count(max_over_time(container_last_seen{name!=\"\", instance=~\"${instance_ip}:.*\"}[100m]))\r\n",
+          "legendFormat": "Total Containers",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "count(\r\n  container_memory_usage_bytes{name!=\"\", instance=~\"${instance_ip}:(8080)\"}\r\n    and on(container)\r\n  (time() - container_last_seen < 10)\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Running Containers",
+          "range": true,
+          "refId": "B"
         }
       ],
-      "title": "ram utilization of node",
-      "type": "gauge"
+      "title": "docker -containers",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -169,7 +183,7 @@
               }
             ]
           },
-          "unit": "decmbytes"
+          "unit": "percent"
         },
         "overrides": []
       },
@@ -179,13 +193,11 @@
         "x": 0,
         "y": 8
       },
-      "id": 5,
+      "id": 6,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
-        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -193,22 +205,22 @@
           "fields": "",
           "values": false
         },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
       "pluginVersion": "12.0.2",
       "targets": [
         {
           "editorMode": "code",
-          "expr": "container_memory_usage_bytes{name!=\"\", instance=~\"${instance_ip}:.*\"} / (1024 * 1024)\r\n",
-          "legendFormat": "{{container}} - {{name}} - {{instance}}",
+          "expr": "((node_memory_MemTotal_bytes{instance=~\"${instance_ip}:.*\"} - node_memory_MemAvailable_bytes{instance=~\"${instance_ip}:.*\"}) \r\n / node_memory_MemTotal_bytes{instance=~\"${instance_ip}:.*\"}) * 100\r\n",
+          "legendFormat": "{{instance}}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "ram utilization of containers",
-      "type": "stat"
+      "title": "ram utilization of node",
+      "type": "gauge"
     },
     {
       "datasource": {
@@ -240,8 +252,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 16
+        "x": 12,
+        "y": 8
       },
       "id": 4,
       "options": {
@@ -294,7 +306,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "decmbytes"
         },
         "overrides": []
       },
@@ -302,9 +315,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 24
+        "y": 16
       },
-      "id": 1,
+      "id": 5,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -326,26 +339,13 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "count(max_over_time(container_last_seen{name!=\"\", instance=~\"${instance_ip}:.*\"}[100m]))\r\n",
-          "legendFormat": "Total Containers",
+          "expr": "container_memory_usage_bytes{name!=\"\", instance=~\"${instance_ip}:.*\"} / (1024 * 1024)\r\n",
+          "legendFormat": "{{container}} - {{name}} - {{instance}}",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "count(\r\n  container_memory_usage_bytes{name!=\"\", instance=~\"${instance_ip}:(8080)\"}\r\n    and on(container)\r\n  (time() - container_last_seen < 10)\r\n)",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Running Containers",
-          "range": true,
-          "refId": "B"
         }
       ],
-      "title": "docker -containers",
+      "title": "ram utilization of containers",
       "type": "stat"
     },
     {
@@ -373,8 +373,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 32
+        "x": 12,
+        "y": 16
       },
       "id": 3,
       "options": {
@@ -420,10 +420,10 @@
         "allowCustomValue": true,
         "current": {
           "text": [
-            "All"
+            "13.232.108.227"
           ],
           "value": [
-            "$__all"
+            "13.232.108.227"
           ]
         },
         "definition": "label_values(container_recently_running, instance)",
@@ -464,5 +464,5 @@
   "timezone": "browser",
   "title": "santosh-1",
   "uid": "d41ef658-4b89-429d-a911-356038307c50",
-  "version": 23
+  "version": 24
 }
