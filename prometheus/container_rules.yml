@@ -4,4 +4,8 @@ groups:
     rules:
       - record: container_recently_running
         expr: |
-          count(container_memory_usage_bytes{container!="", image!=""}) by (instance)
+          count(container_memory_usage_bytes{image!=""}) by (instance)
+
+
+
+# variable code and regex label_values(container_recently_running, instance)  /([^:]+):.*/

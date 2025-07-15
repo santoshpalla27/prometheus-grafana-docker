@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 3,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -419,14 +419,10 @@
       {
         "allowCustomValue": true,
         "current": {
-          "text": [
-            "13.232.108.227"
-          ],
-          "value": [
-            "13.232.108.227"
-          ]
+          "text": "All",
+          "value": "$__all"
         },
-        "definition": "label_values(container_recently_running, instance)",
+        "definition": "query_result(count(container_memory_usage_bytes{image!=\"\"}) by (instance))",
         "description": "instance_ip",
         "includeAll": true,
         "label": "instance_ip",
@@ -434,24 +430,12 @@
         "name": "instance_ip",
         "options": [],
         "query": {
-          "qryType": 5,
-          "query": "label_values(container_recently_running, instance)",
+          "qryType": 3,
+          "query": "query_result(count(container_memory_usage_bytes{image!=\"\"}) by (instance))",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
-        "regex": "/([^:]+):.*/",
-        "type": "query"
-      },
-      {
-        "current": {
-          "text": "",
-          "value": ""
-        },
-        "name": "query0",
-        "options": [],
-        "query": "",
-        "refresh": 1,
-        "regex": "",
+        "regex": "/instance=\"([^:]+):/",
         "type": "query"
       }
     ]
@@ -464,5 +448,5 @@
   "timezone": "browser",
   "title": "santosh-1",
   "uid": "d41ef658-4b89-429d-a911-356038307c50",
-  "version": 24
+  "version": 5
 }
