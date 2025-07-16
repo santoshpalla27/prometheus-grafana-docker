@@ -50,17 +50,28 @@ services:
     networks:
       - monitoring
 
-  blackbox-exporter:
-    image: prom/blackbox-exporter:v0.25.0
-    container_name: blackbox-exporter
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    container_name: alertmanager
     ports:
-      - "9115:9115"
+      - "9093:9093"
     volumes:
-      - ./blackbox/blackbox.yml:/config/blackbox.yml
-    command:
-      - '--config.file=/config/blackbox.yml'
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
     networks:
       - monitoring
+
+
+  # blackbox-exporter:
+  #   image: prom/blackbox-exporter:v0.25.0
+  #   container_name: blackbox-exporter
+  #   ports:
+  #     - "9115:9115"
+  #   volumes:
+  #     - ./blackbox/blackbox.yml:/config/blackbox.yml
+  #   command:
+  #     - '--config.file=/config/blackbox.yml'
+  #   networks:
+  #     - monitoring
 
   # docker-exporter:
   #   image: quay.io/prometheuscommunity/docker-exporter:v1.6.0
