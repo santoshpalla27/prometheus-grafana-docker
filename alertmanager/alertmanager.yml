@@ -7,6 +7,7 @@ global:
 
 route:
   receiver: 'email-notifications'
+  repeat_interval: 10m
 
 receivers:
   - name: 'email-notifications'
