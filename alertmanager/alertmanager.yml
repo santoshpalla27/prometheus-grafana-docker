@@ -1,14 +1,15 @@
 global:
   resolve_timeout: 5m
+  smtp_smarthost: 'smtp.gmail.com:587'          # e.g., Gmail SMTP
+  smtp_from: 'santoshpalla27@gmail.com'
+  smtp_auth_username: 'santoshpalla27@gmail.com'
+  smtp_auth_password: 'yoxw jzta egzb qbxl'       # ← App password, NOT your Gmail login
 
 route:
-  receiver: 'default'
+  receiver: 'email-notifications'
 
 receivers:
-  - name: 'default'
+  - name: 'email-notifications'
     email_configs:
       - to: 'santoshpalla27inazuma@gmail.com'
-        from: 'santoshpalla27@gmail.com'
-        smarthost: 'smtp.example.com:587'
-        auth_username: 'santoshpalla27@gmail.com'
-        auth_password: 'yoxw jzta egzb qbxl'
+        send_resolved: true
