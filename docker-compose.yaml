@@ -62,7 +62,7 @@ services:
       - monitoring
 
 
-    blackbox:
+  blackbox:
     image: prom/blackbox-exporter:v0.25.0
     container_name: blackbox-exporter
     ports:
