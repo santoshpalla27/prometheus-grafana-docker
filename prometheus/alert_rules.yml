@@ -119,3 +119,19 @@ groups:
         annotations:
           summary: "🚨 High Disk Usage on {{ $labels.instance }}"
           description: "Disk usage has exceeded 80% across all real volumes on {{ $labels.instance }}."
+
+
+
+
+
+      - alert: WebsiteDown
+        expr: probe_success == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "🔴 Website down: {{ $labels.instance }}"
+          description: |
+            Probe to {{ $labels.instance }} has failed.
+            The domain is unreachable or returned an unexpected status.
+            Please investigate the issue.
