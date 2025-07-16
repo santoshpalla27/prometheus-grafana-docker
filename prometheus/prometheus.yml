@@ -11,6 +11,7 @@ rule_files:
   - "alert_rules.yml"
 
 scrape_configs:
+
   - job_name: 'prometheus'
     static_configs:
       - targets: ['prometheus:9090']
@@ -53,15 +54,15 @@ scrape_configs:
       module: [http_2xx]
     static_configs:
       - targets:
-          - https://www.google.com
-          - https://santosh.website
+          - https://example.com
+          - https://your-api.yourdomain.com
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: blackbox-exporter:9115
+        replacement: blackbox:9115
 
   - job_name: 'docker-exporter'
     static_configs:
