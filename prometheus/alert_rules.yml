@@ -1,0 +1,77 @@
+groups:
+  - name: ec2_container_alerts
+    interval: 30s
+    rules:
+      - alert: HighContainerCPUUsage
+        expr: |
+          rate(container_cpu_usage_seconds_total{name!="", instance=~".*"}[1m]) * 100 > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High container CPU usage on {{ $labels.instance }}"
+          description: "CPU usage exceeded 80% for more than 2 minutes"
+
+      - alert: HighContainerMemoryUsage
+        expr: |
+          container_memory_usage_bytes{name!="", instance=~".*"} / (1024 * 1024) > 500
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High container memory usage on {{ $labels.instance }}"
+          description: "Container memory usage is over 500 MB"
+
+      - alert: ContainerStoppedRecently
+        expr: |
+          max_over_time(container_last_seen{name!="", instance=~".*"}[15m])
+          unless
+          container_memory_usage_bytes{name!=""}
+        for: 1m
+        labels:
+          severity: info
+        annotations:
+          summary: "Container stopped recently on {{ $labels.instance }}"
+          description: "Some containers have exited in the last 15 minutes."
+
+      - alert: HighNodeCPUUtilization
+        expr: |
+          sum by (instance) (
+            rate(container_cpu_usage_seconds_total{name!="", instance=~".*"}[1m])
+          )
+          /
+          on(instance)
+          group_left
+          machine_cpu_cores
+          * 100 > 85
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Node CPU utilization high on {{ $labels.instance }}"
+          description: "Docker node CPU utilization is over 85%"
+
+      - alert: HighNodeMemoryUtilization
+        expr: |
+          ((node_memory_MemTotal_bytes{instance=~".*"} - node_memory_MemAvailable_bytes{instance=~".*"})
+           / node_memory_MemTotal_bytes{instance=~".*"}) * 100 > 85
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on node {{ $labels.instance }}"
+          description: "Node memory utilization is above 85%"
+
+      - alert: NoRunningContainers
+        expr: |
+          count(
+            container_memory_usage_bytes{name!="", instance=~".*"}
+            and on(container)
+            (time() - container_last_seen < 10)
+          ) == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "No running containers on {{ $labels.instance }}"
+          description: "All containers on the instance are stopped."
